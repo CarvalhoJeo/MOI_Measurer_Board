@@ -15,7 +15,9 @@ void StateManager::run(){
             if(input == 'X'){
                 state = MEASURING;
             }else{
-                Serial.flush();
+                while (Serial.available() > 0) {
+                    Serial.read();
+                }
             }
         }
         break;
