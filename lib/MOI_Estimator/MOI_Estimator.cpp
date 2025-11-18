@@ -64,4 +64,5 @@ JsonDocument MOI_Estimator::getJsonData(){
     json["totalMOI"] = totalMOI;
     json["platformMOI"] = platformMOI;
     json["objectMOI"] = objectMOI;
+    return json;
 }

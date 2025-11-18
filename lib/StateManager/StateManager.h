@@ -12,6 +12,9 @@ private:
     States state = WAIT_FOR_START;
     bool firstSensorDetected = false;
     bool secondSensorDetected = false;
+    int pin_top_sensor = 7;
+    int pin_bottom_sensor = 11;
+
 public:
     StateManager();
 

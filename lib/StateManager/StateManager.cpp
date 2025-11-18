@@ -1,23 +1,30 @@
 #include <Arduino.h>
 #include <StateManager.h>
-#include <BoardConstants.h>
 #include <ArduinoJson.h>
+
+StateManager::StateManager(){
+    pinMode(13, OUTPUT);
+}
 
 void StateManager::run(){
     switch (state) {
     case WAIT_FOR_START:
+        digitalWrite(13, LOW);
         if(Serial.available() > 0){
             char input = Serial.read();
             if(input == 'X'){
                 state = MEASURING;
+            }else{
+                Serial.flush();
             }
         }
         break;
     case MEASURING:
-        if(digitalRead(TOP_IR_PIN) && !secondSensorDetected){
+        digitalWrite(13, HIGH);
+        if(digitalRead(pin_top_sensor) && !secondSensorDetected){
             firstSensorDetected = true;
             moi_estimator->seenWeightInInitialHeight();
-        }else if(firstSensorDetected && digitalRead(BOTTOM_IR_PIN)){
+        }else if(firstSensorDetected && digitalRead(pin_bottom_sensor)){
             moi_estimator->seenWeightInFinalHeight();
             secondSensorDetected = true;
         }
@@ -27,6 +34,7 @@ void StateManager::run(){
         }
         break;
     case SEND_VALUES:
+        digitalWrite(13, LOW);
         Serial.flush();
         serializeJson(moi_estimator->getJsonData(), Serial);
         state = RESET;
