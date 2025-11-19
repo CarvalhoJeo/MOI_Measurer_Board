@@ -17,6 +17,5 @@ private:
 
 public:
     StateManager();
-
     void run();
 };

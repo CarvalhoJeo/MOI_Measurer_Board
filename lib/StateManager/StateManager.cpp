@@ -4,6 +4,8 @@
 
 StateManager::StateManager(){
     pinMode(13, OUTPUT);
+    pinMode(7, INPUT);
+    pinMode(11, INPUT);    
 }
 
 void StateManager::run(){
@@ -14,19 +16,15 @@ void StateManager::run(){
             char input = Serial.read();
             if(input == 'X'){
                 state = MEASURING;
-            }else{
-                while (Serial.available() > 0) {
-                    Serial.read();
-                }
             }
         }
         break;
     case MEASURING:
         digitalWrite(13, HIGH);
-        if(digitalRead(pin_top_sensor) && !secondSensorDetected){
+        if(!digitalRead(pin_top_sensor) && !secondSensorDetected){
             firstSensorDetected = true;
             moi_estimator->seenWeightInInitialHeight();
-        }else if(firstSensorDetected && digitalRead(pin_bottom_sensor)){
+        }else if(firstSensorDetected && !digitalRead(pin_bottom_sensor)){
             moi_estimator->seenWeightInFinalHeight();
             secondSensorDetected = true;
         }
