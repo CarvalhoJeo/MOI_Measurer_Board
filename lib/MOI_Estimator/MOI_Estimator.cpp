@@ -41,14 +41,18 @@ float MOI_Estimator::calculateTorqueInPulley(){
 
 float MOI_Estimator::calculateTotalMOI(){
     totalMOI = calculateTorqueInPulley()/calculatePulleyAngularAceleration();
+    return totalMOI;
 }
 
 float MOI_Estimator::calculateObjectMOI(){
+    calculateTotalMOI();
     objectMOI = forcesInWeight*pulleyRadius;
+    objectMOI = totalMOI - platformMOI;
+    return objectMOI;
 }
 
 void MOI_Estimator::calculate(){
-    calculateTotalMOI();
+    calculateObjectMOI();
 }
 
 JsonDocument MOI_Estimator::getJsonData(){
